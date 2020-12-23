@@ -1,0 +1,30 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type DeskState {
+  cm: Float!
+  inch: Float!
+  value: Float!
+  speed: Float!
+}
+
+type Desk {
+  profile: ID!
+  name: String!
+  address: String!
+  state: DeskState!
+}
+
+type Query {
+  desk(profile: String!): Desk!
+}
+
+type Mutation {
+  up(profile: String!): DeskState!
+  down(profile: String!): DeskState!
+}
+
+type Subscription {
+  stateChange: DeskState!
+}
