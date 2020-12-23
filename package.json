@@ -5,6 +5,13 @@
   "author": "Alexandros Fotiadis <fotiadis@alexandros.blue>",
   "license": "MIT",
   "engines" : { "node" : ">=12.20.0" },
+  "main": "./dist/index.js",
+  "bin": {
+    "deskgraph": "./bin/deskgraph"
+  },
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

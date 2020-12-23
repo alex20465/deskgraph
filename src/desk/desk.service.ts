@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Bluetooth, factory } from 'deskbluez';
-import { AbstractDesk, DeskState } from 'deskbluez/dist/desks/AbstractDesk';
+import {
+  AbstractDesk,
+  DeskState,
+  DESK_EVENT,
+} from 'deskbluez/dist/desks/AbstractDesk';
 import { ConfigManager } from 'deskbluez/dist/lib/config';
+import { EventEmitter } from 'ws';
 import { Desk } from './models';
 
 const { BLUETOOTH_ADAPTER = 'hci0' } = process.env;
@@ -10,9 +15,18 @@ const { BLUETOOTH_ADAPTER = 'hci0' } = process.env;
 export class DeskService {
   private bluetooth = new Bluetooth();
 
+  private connectedDevices: { [key: string]: AbstractDesk } = {};
+
+  private stateChangeEmitter: EventEmitter = new EventEmitter();
+
   constructor() {
-    this.bluetooth.init(BLUETOOTH_ADAPTER);
+    this.init().then(() => console.log('done'));
   }
+
+  private init = async () => {
+    await this.bluetooth.init(BLUETOOTH_ADAPTER);
+    await this.connectDevice('default');
+  };
 
   public get(profile: string): Desk {
     const config = new ConfigManager(profile);
@@ -40,7 +54,15 @@ export class DeskService {
     return desk.down();
   }
 
+  public onStateChange(profile: string, handler: (state: DeskState) => void) {
+    this.stateChangeEmitter.on(`state.change.${profile}`, handler);
+  }
+
   private async connectDevice(profile: string): Promise<AbstractDesk> {
+    if (this.connectedDevices[profile]) {
+      return this.connectedDevices[profile];
+    }
+
     const config = new ConfigManager(profile);
     const { address, modelName } = config.getConnectedDevice();
     const model = factory.getDeskModel(modelName);
@@ -49,6 +71,16 @@ export class DeskService {
     await this.bluetooth.stopDiscovery();
     const desk = factory.createDesk(model, bluetoothDevice);
     await desk.connect();
+    await desk.device.Connected();
+
+    desk.addListener(DESK_EVENT.STATE_CHANGE, (state) => {
+      this.stateChangeEmitter.emit(`state.change.${profile}`, state);
+    });
+
+    await desk.subscribe();
+
+    this.connectedDevices[profile] = desk;
+
     return desk;
   }
 }

@@ -15,7 +15,11 @@ const pubSub = new PubSub();
 
 @Resolver((of) => Desk)
 export class DeskResolver {
-  constructor(private readonly service: DeskService) {}
+  constructor(private readonly service: DeskService) {
+    service.onStateChange('default', (state) => {
+      pubSub.publish(`state.change.default`, { stateChange: state });
+    });
+  }
 
   @Query((returns) => Desk)
   async desk(@Args('profile') profile: string): Promise<Desk> {
@@ -31,7 +35,6 @@ export class DeskResolver {
   async up(@Args('profile') profile: string): Promise<DeskState> {
     await this.service.up(profile);
     const stateChange = await this.service.getState(profile);
-    pubSub.publish('stateChange', { stateChange });
     return stateChange;
   }
 
@@ -39,11 +42,11 @@ export class DeskResolver {
   async down(@Args('profile') profile: string): Promise<DeskState> {
     await this.service.down(profile);
     const stateChange = await this.service.getState(profile);
-    pubSub.publish('stateChange', { stateChange });
     return stateChange;
   }
+
   @Subscription((returns) => DeskState)
-  async stateChange() {
-    return pubSub.asyncIterator('stateChange');
+  async stateChange(@Args('profile') profile: string) {
+    return pubSub.asyncIterator(`state.change.${profile}`);
   }
 }

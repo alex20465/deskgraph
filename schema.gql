@@ -26,5 +26,5 @@ type Mutation {
 }
 
 type Subscription {
-  stateChange: DeskState!
+  stateChange(profile: String!): DeskState!
 }
