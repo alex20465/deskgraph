@@ -1,73 +1,101 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Deskgraph (deskbluez microservice)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a GraphQL microservice implementation of [deskbluez](https://github.com/alex20465/deskbluez) with the goal to decouple the application backend system for ui implementations.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## UNDER DEVELOPMENT
 
-## Description
+# Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Subscribe to desk state changes via graphQL subscriptions
 
-## Installation
+- Perform mutations: Up/Down
 
-```bash
-$ npm install
+# Requirements
+
+- See requirements section [deskbluez#requirements](https://github.com/alex20465/deskbluez#Requirements)
+
+# Installation
+
+```
+$ npm install -g deskgraph
 ```
 
-## Running the app
+> Deskbluez is not required but its necessary to configure the devices
 
-```bash
-# development
-$ npm run start
+# Configuration
 
-# watch mode
-$ npm run start:dev
+Deskgraph uses the same configuration manager as `deskbluez`, every created profile is compatible with the deskgraph as long the micro-service and the cli tool is used by the same user.
 
-# production mode
-$ npm run start:prod
+# Run service
+
+```
+$ deskgraph
 ```
 
-## Test
+> GraphQL Apollo IDE available under: http://localhost:3000/graphql
 
-```bash
-# unit tests
-$ npm run test
+# Use it Programmatically
 
-# e2e tests
-$ npm run test:e2e
+```typescript
 
-# test coverage
-$ npm run test:cov
+import {NestFactory, AppModule} from "deskgraph";
+
+async function customBootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+
+customBootstrap();
+
 ```
 
-## Support
+You can use the nestjs module separately by importing the `DeskModule`:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```typescript
+import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { DeskModule } from 'deskgraph';
 
-## Stay in touch
+@Module({
+  imports: [
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'schema.gql',
+      installSubscriptionHandlers: true,
+    }),
+    DeskModule,
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+    /**
+     * Your additional modules
+     */
 
-## License
+  ],
+})
+export class YourCustomNestJSModuleApplication {}
+```
 
-Nest is [MIT licensed](LICENSE).
+OR just use the `DeskService`:
+
+```typescript
+import { Module } from '@nestjs/common';
+import { DeskService } from 'deskgraph';
+
+@Module({
+  providers: [DeskService],
+})
+export class MyNestJSModule {}
+
+```
+
+# Not Implemented yet
+
+- Implement move-to specific position
+- Expose functionality to connect / pair a new desk device
+- Service configurations
+- - Disable graphql-IDE
+- - Specific port
+
+---
+
+`all you need is here, keep calm and stop being emotional, start using nestjs with typescript and don't waste your time.`
+
+---
