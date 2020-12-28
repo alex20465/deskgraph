@@ -1,6 +1,26 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 
-import { DeskState as DeskbluezDeskState } from 'deskbluez/dist/desks/AbstractDesk';
+import {
+  DeskState as DeskbluezDeskState,
+  LENGTH_UNITS,
+} from 'deskbluez/dist/desks/AbstractDesk';
+
+registerEnumType(LENGTH_UNITS, { name: 'LENGTH_UNITS' });
+
+@InputType()
+export class DeskMoverInput {
+  @Field()
+  position: number;
+
+  @Field((type) => LENGTH_UNITS)
+  unit: LENGTH_UNITS;
+}
 
 @ObjectType()
 export class DeskState implements DeskbluezDeskState {

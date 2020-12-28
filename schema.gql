@@ -23,6 +23,18 @@ type Query {
 type Mutation {
   up(profile: String!): DeskState!
   down(profile: String!): DeskState!
+  to(input: DeskMoverInput!, profile: String!): Boolean!
+}
+
+input DeskMoverInput {
+  position: Float!
+  unit: LENGTH_UNITS!
+}
+
+enum LENGTH_UNITS {
+  CM
+  DESK
+  INC
 }
 
 type Subscription {

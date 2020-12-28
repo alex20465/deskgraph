@@ -6,12 +6,16 @@ import {
   ResolveField,
   Mutation,
   Subscription,
+  registerEnumType,
 } from '@nestjs/graphql';
 import { DeskService } from './desk.service';
 import { PubSub } from 'apollo-server-express';
-import { Desk, DeskState } from './models';
+import { Desk, DeskMoverInput, DeskState } from './models';
+import { LENGTH_UNITS } from 'deskbluez/dist/desks/AbstractDesk';
 
 const pubSub = new PubSub();
+
+registerEnumType(LENGTH_UNITS, { name: 'LENGTH_UNITS' });
 
 @Resolver((of) => Desk)
 export class DeskResolver {
@@ -43,6 +47,14 @@ export class DeskResolver {
     await this.service.down(profile);
     const stateChange = await this.service.getState(profile);
     return stateChange;
+  }
+
+  @Mutation((returns) => Boolean)
+  async to(
+    @Args('profile') profile: string,
+    @Args('input') input: DeskMoverInput,
+  ): Promise<boolean> {
+    return this.service.to(profile, input.position, input.unit);
   }
 
   @Subscription((returns) => DeskState)

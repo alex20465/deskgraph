@@ -4,6 +4,7 @@ import {
   AbstractDesk,
   DeskState,
   DESK_EVENT,
+  LENGTH_UNITS,
 } from 'deskbluez/dist/desks/AbstractDesk';
 import { ConfigManager } from 'deskbluez/dist/lib/config';
 import { EventEmitter } from 'ws';
@@ -52,6 +53,15 @@ export class DeskService {
   public async down(profile: string) {
     const desk = await this.connectDevice(profile);
     return desk.down();
+  }
+
+  public async to(
+    profile: string,
+    position: number,
+    unit: LENGTH_UNITS,
+  ): Promise<boolean> {
+    const desk = await this.connectDevice(profile);
+    return desk.moveTo(position, unit);
   }
 
   public onStateChange(profile: string, handler: (state: DeskState) => void) {
