@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { DeskResolver } from './desk.resolver';
-import { DeskService } from './desk.service';
+import { DeskbluezService } from './deskbluez.service';
 
 @Module({
-  providers: [DeskService, DeskResolver],
+  providers: [DeskbluezService, DeskResolver],
 })
 export class DeskModule {}

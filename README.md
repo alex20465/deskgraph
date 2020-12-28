@@ -77,7 +77,7 @@ OR just use the `DeskService`:
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { DeskService } from 'deskgraph';
+import { DeskbluezService } from 'deskgraph';
 
 @Module({
   providers: [DeskService],

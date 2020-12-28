@@ -8,7 +8,7 @@ import {
   Subscription,
   registerEnumType,
 } from '@nestjs/graphql';
-import { DeskService } from './desk.service';
+import { DeskbluezService } from './deskbluez.service';
 import { PubSub } from 'apollo-server-express';
 import { Desk, DeskMoverInput, DeskState } from './models';
 import { LENGTH_UNITS } from 'deskbluez/dist/desks/AbstractDesk';
@@ -19,7 +19,7 @@ registerEnumType(LENGTH_UNITS, { name: 'LENGTH_UNITS' });
 
 @Resolver((of) => Desk)
 export class DeskResolver {
-  constructor(private readonly service: DeskService) {
+  constructor(private readonly service: DeskbluezService) {
     service.onStateChange('default', (state) => {
       pubSub.publish(`state.change.default`, { stateChange: state });
     });

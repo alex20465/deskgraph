@@ -1,4 +1,4 @@
 export { NestFactory } from '@nestjs/core';
 export { AppModule } from './app.module';
 export { DeskModule } from './desk/desk.module';
-export { DeskService } from './desk/desk.service';
+export { DeskbluezService as DeskService } from './desk/deskbluez.service';

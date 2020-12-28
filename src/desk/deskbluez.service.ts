@@ -13,7 +13,7 @@ import { Desk } from './models';
 const { BLUETOOTH_ADAPTER = 'hci0' } = process.env;
 
 @Injectable()
-export class DeskService {
+export class DeskbluezService {
   private bluetooth = new Bluetooth();
 
   private connectedDevices: { [key: string]: AbstractDesk } = {};
