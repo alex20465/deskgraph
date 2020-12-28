@@ -12,6 +12,7 @@ import {
 } from 'deskbluez/dist/desks/AbstractDesk';
 
 import { DeskModelItem as DeskbluezDeskModelItem } from 'deskbluez/dist/desks/types';
+import { DiscoveredDevice as DeskbluezDiscoveredDevice } from 'deskbluez/dist/lib/bluetooth';
 
 registerEnumType(LENGTH_UNITS, { name: 'LENGTH_UNITS' });
 
@@ -22,6 +23,15 @@ export class DeskMoverInput {
 
   @Field((type) => LENGTH_UNITS)
   unit: LENGTH_UNITS;
+}
+
+@ObjectType()
+export class DiscoveredDevice implements DeskbluezDiscoveredDevice {
+  @Field()
+  name: string;
+
+  @Field()
+  address: string;
 }
 
 @ObjectType()

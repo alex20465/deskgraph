@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Bluetooth, factory } from 'deskbluez';
+import { Bluetooth, DiscoveredDevice, factory } from 'deskbluez';
 import {
   AbstractDesk,
   DeskState,
@@ -28,7 +28,6 @@ export class DeskbluezService {
 
   private init = async () => {
     await this.bluetooth.init(BLUETOOTH_ADAPTER);
-    await this.connectDevice('default');
   };
 
   public get(profile: string): Desk {
@@ -44,6 +43,18 @@ export class DeskbluezService {
 
   public async getModels(): Promise<DeskModelItem[]> {
     return REGISTRY;
+  }
+
+  public async getModel(modelName: string): Promise<DeskModelItem> {
+    const [item = null] = REGISTRY.filter((item) => item.name === modelName);
+
+    if (item === null) {
+      throw new Error(
+        `Desk model name: ${modelName} is not registered in the REGISTRY`,
+      );
+    }
+
+    return item;
   }
 
   public async getState(profile: string): Promise<DeskState> {
@@ -72,6 +83,32 @@ export class DeskbluezService {
 
   public onStateChange(profile: string, handler: (state: DeskState) => void) {
     this.stateChangeEmitter.on(`state.change.${profile}`, handler);
+  }
+
+  public async discoverDevices(
+    model: DeskModelItem,
+  ): Promise<DiscoveredDevice[]> {
+    return this.bluetooth.discoverDevices(model.services);
+  }
+
+  public async connect(profile: string, modelName: string, address: string) {
+    const config = new ConfigManager(profile);
+
+    const bluetoothDevice = await this.bluetooth.connect(address);
+
+    await bluetoothDevice.Pair();
+
+    await bluetoothDevice.Paired();
+
+    await this.connectDevice(profile);
+
+    await config.setConnectedDevice({
+      name: profile,
+      address,
+      modelName,
+    });
+
+    return true;
   }
 
   private async connectDevice(profile: string): Promise<AbstractDesk> {

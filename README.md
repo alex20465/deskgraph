@@ -88,7 +88,6 @@ export class MyNestJSModule {}
 
 # Not Implemented yet
 
-- Expose functionality to connect / pair a new desk device
 - Service configurations
 - - Disable graphql-IDE
 - - Specific port

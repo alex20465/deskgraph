@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type DiscoveredDevice {
+  name: String!
+  address: String!
+}
+
 type DeskModelItem {
   name: String!
   services: [String!]!
@@ -25,9 +30,11 @@ type Desk {
 type Query {
   desk(profile: String!): Desk!
   models: [DeskModelItem!]!
+  discoveredDevices(model: String!): [DiscoveredDevice!]!
 }
 
 type Mutation {
+  connectDevice(address: String!, modelName: String!, profile: String!): Boolean!
   up(profile: String!): DeskState!
   down(profile: String!): DeskState!
   to(input: DeskMoverInput!, profile: String!): Boolean!
