@@ -32,7 +32,29 @@ Deskgraph uses the same configuration manager as `deskbluez`, every created prof
 $ deskgraph
 ```
 
-> GraphQL Apollo IDE available under: http://localhost:3000/graphql
+> Access graphQL endpoint under: `http://localhost:3000/graphql`
+
+> When PLAYGROUND is enabled, the apollo-playground is accessible under `/graphql`
+
+## Configurations (ENVIRONMENT VARIABLES)
+
+```
+HTTP_PORT=XXXX (default: 3000)
+PLAYGROUND=X (default: 0)
+```
+
+USAGE:
+
+```
+$ PLAYGROUND=1 HTTP_PORT=5000 deskgraph
+```
+
+Playground:
+
+![Playground](./assets/apollo-playground-screenshot.png)
+
+# Query & Mutation examples
+
 
 # Use it Programmatically
 
@@ -85,12 +107,6 @@ import { DeskbluezService } from 'deskgraph';
 export class MyNestJSModule {}
 
 ```
-
-# Not Implemented yet
-
-- Service configurations
-- - Disable graphql-IDE
-- - Specific port
 
 ---
 
