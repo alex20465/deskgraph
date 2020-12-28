@@ -11,6 +11,8 @@ import {
   LENGTH_UNITS,
 } from 'deskbluez/dist/desks/AbstractDesk';
 
+import { DeskModelItem as DeskbluezDeskModelItem } from 'deskbluez/dist/desks/types';
+
 registerEnumType(LENGTH_UNITS, { name: 'LENGTH_UNITS' });
 
 @InputType()
@@ -20,6 +22,18 @@ export class DeskMoverInput {
 
   @Field((type) => LENGTH_UNITS)
   unit: LENGTH_UNITS;
+}
+
+@ObjectType()
+export class DeskModelItem implements DeskbluezDeskModelItem {
+  @Field()
+  name: string;
+
+  @Field((type) => [String])
+  services: string[];
+
+  @Field()
+  cls: string;
 }
 
 @ObjectType()

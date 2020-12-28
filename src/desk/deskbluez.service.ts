@@ -6,7 +6,9 @@ import {
   DESK_EVENT,
   LENGTH_UNITS,
 } from 'deskbluez/dist/desks/AbstractDesk';
+import { DeskModelItem } from 'deskbluez/dist/desks/types';
 import { ConfigManager } from 'deskbluez/dist/lib/config';
+import REGISTRY from 'deskbluez/dist/REGISTRY';
 import { EventEmitter } from 'ws';
 import { Desk } from './models';
 
@@ -38,6 +40,10 @@ export class DeskbluezService {
       profile: profile,
       address: desk.address,
     };
+  }
+
+  public async getModels(): Promise<DeskModelItem[]> {
+    return REGISTRY;
   }
 
   public async getState(profile: string): Promise<DeskState> {

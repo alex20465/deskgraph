@@ -10,7 +10,7 @@ import {
 } from '@nestjs/graphql';
 import { DeskbluezService } from './deskbluez.service';
 import { PubSub } from 'apollo-server-express';
-import { Desk, DeskMoverInput, DeskState } from './models';
+import { Desk, DeskModelItem, DeskMoverInput, DeskState } from './models';
 import { LENGTH_UNITS } from 'deskbluez/dist/desks/AbstractDesk';
 
 const pubSub = new PubSub();
@@ -28,6 +28,15 @@ export class DeskResolver {
   @Query((returns) => Desk)
   async desk(@Args('profile') profile: string): Promise<Desk> {
     return this.service.get(profile);
+  }
+
+  @Query((returns) => [DeskModelItem])
+  async models(): Promise<DeskModelItem[]> {
+    return (await this.service.getModels()).map((item) => ({
+      cls: item.cls.name || 'non',
+      name: item.name,
+      services: item.services,
+    }));
   }
 
   @ResolveField((returns) => DeskState)
