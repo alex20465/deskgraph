@@ -34,9 +34,11 @@
     "apollo-server-express": "^2.19.1",
     "deskbluez": "^2.1.0",
     "graphql": "^15.4.0",
+    "mkdirp": "^1.0.4",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
+    "selfsigned": "^1.10.8",
     "standard-version": "^9.0.0"
   },
   "devDependencies": {
