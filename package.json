@@ -1,6 +1,6 @@
 {
   "name": "deskgraph",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "GraphQL based HTTP Server to manage lower energy actuator systems (office desks) over bluetooth.",
   "author": "Alexandros Fotiadis <fotiadis@alexandros.blue>",
   "license": "MIT",
